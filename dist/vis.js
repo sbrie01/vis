@@ -40687,7 +40687,6 @@ return /******/ (function(modules) { // webpackBootstrap
   	}, {
   		key: 'updateEdgeType',
   		value: function updateEdgeType() {
-  			console.log("This is the edge: ", this);
   			var smooth = this.options.smooth;
   			var dataChanged = false;
   			var changeInType = true;
@@ -42053,10 +42052,13 @@ return /******/ (function(modules) { // webpackBootstrap
         if (node1 != node2) {
           if (position !== 'middle') {
             // draw arrow head
-            if (this.options.smooth.enabled === true) {
+            if (this.options.smooth.enabled === true || this.elbow === true) {
               arrowPoint = this.findBorderPosition(node1, ctx, { via: viaNode });
               var guidePos = this.getPoint(Math.max(0.0, Math.min(1.0, arrowPoint.t + guideOffset)), viaNode);
               angle = Math.atan2(arrowPoint.y - guidePos.y, arrowPoint.x - guidePos.x);
+            } else if (this.elbow === true) {
+              angle = Match.atan2(this.via.y - node2.y, this.via.x - node2.x);
+              arrowPoint = this.findBorderPosition(this.via, ctx);
             } else {
               angle = Math.atan2(node1.y - node2.y, node1.x - node2.x);
               arrowPoint = this.findBorderPosition(node1, ctx);
@@ -42781,6 +42783,7 @@ return /******/ (function(modules) { // webpackBootstrap
   									this.id = this.options.id;
   									this.from = this.body.nodes[this.options.from];
   									this.to = this.body.nodes[this.options.to];
+  									this.elbow = true;
 
   									// setup the support node and connect
   									this.setupSupportNode();
@@ -42979,12 +42982,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
   									// check distance of first line segment
   									distance = this._getDistanceToLine(x1, y1, this.via.x, this.via.y, x3, y3);
-  									console.log("distance 1: ", distance);
   									minDistance = distance < minDistance ? distance : minDistance;
 
   									// check distance of second line segment
   									distance = this._getDistanceToLine(this.via.x, this.via.y, x2, y2, x3, y3);
-  									console.log("distance 2: ", distance);
   									minDistance = distance < minDistance ? distance : minDistance;
 
   									return minDistance;
