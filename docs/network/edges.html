@@ -129,6 +129,7 @@ var options = {
       opacity:1.0
     },
     dashes: false,
+    elbow: false,
     font: {
       color: '#343434',
       size: 14, // px
@@ -459,6 +460,12 @@ network.setOptions(options);
                 <i>When using dashed lines in IE versions older than 11, the line will be drawn straight, not smooth</i>.
             </td>
         </tr>
+	<tr>
+	    <td>elbow</td>
+	    <td>Boolean</td>
+	    <td><code>false</code></td>
+	    <td>When true, the edge will have a movable anchor point node, positioned at the midpoint between two nodes.</td>
+	</tr>
         <tr class='toggle collapsible' onclick="toggleTable('optionTable','font', this);">
             <td><span parent="font" class="right-caret"></span> font</td>
             <td>Object or String</td>
