@@ -42908,7 +42908,7 @@ return /******/ (function(modules) { // webpackBootstrap
   						key: "_line",
   						value: function _line(ctx, values, viaNode) {
   									// this._elbowLine(ctx, values, viaNode);
-  									console.log(this.fromPoint.x + "," + this.fromPoint.y + " => " + viaNode.x + "," + viaNode.y + " => " + this.toPoint.x + "," + this.toPoint.y);
+  									// console.log(this.fromPoint.x + "," + this.fromPoint.y + " => " + viaNode.x + "," + viaNode.y + " => " + this.toPoint.x + "," + this.toPoint.y)
 
   									// draw first half of line
   									ctx.beginPath();
@@ -42974,7 +42974,21 @@ return /******/ (function(modules) { // webpackBootstrap
   						key: "_getDistanceToEdge",
   						value: function _getDistanceToEdge(x1, y1, x2, y2, x3, y3) {
   									// x3,y3 is the point
-  									return this._getDistanceToLine(x1, y1, x2, y2, x3, y3);
+  									var minDistance = 1e9;
+  									var distance = void 0;
+
+  									// check distance of first line segment
+  									distance = this._getDistanceToLine(x1, y1, this.via.x, this.via.y, x3, y3);
+  									console.log("distance 1: ", distance);
+  									minDistance = distance < minDistance ? distance : minDistance;
+
+  									// check distance of second line segment
+  									distance = this._getDistanceToLine(this.via.x, this.via.y, x2, y2, x3, y3);
+  									console.log("distance 2: ", distance);
+  									minDistance = distance < minDistance ? distance : minDistance;
+
+  									return minDistance;
+  									// return this._getDistanceToLine(x1, y1, x2, y2, x3, y3);
   						}
   			}]);
   			return ElbowEdge;
