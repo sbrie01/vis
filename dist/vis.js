@@ -42722,6 +42722,10 @@ return /******/ (function(modules) { // webpackBootstrap
   			value: true
   });
 
+  var _slicedToArray2 = __webpack_require__(171);
+
+  var _slicedToArray3 = _interopRequireDefault(_slicedToArray2);
+
   var _getPrototypeOf = __webpack_require__(176);
 
   var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
@@ -42925,6 +42929,45 @@ return /******/ (function(modules) { // webpackBootstrap
   						value: function getViaNode() {
   									return this.via;
   						}
+
+  						/**
+         * Combined function of pointOnLine and pointOnBezier. This gives the coordinates of a point on the line at a certain percentage of the way
+         * @param percentage
+         * @param viaNode
+         * @returns {{x: number, y: number}}
+         * @private
+         */
+
+  			}, {
+  						key: "getPoint",
+  						value: function getPoint(percentage) {
+  									var viaNode = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.via;
+
+  									var t = percentage;
+  									var x = void 0,
+  									    y = void 0;
+  									if (this.from === this.to) {
+  												var _getCircleData = this._getCircleData(this.from),
+  												    _getCircleData2 = (0, _slicedToArray3["default"])(_getCircleData, 3),
+  												    cx = _getCircleData2[0],
+  												    cy = _getCircleData2[1],
+  												    cr = _getCircleData2[2];
+
+  												var a = 2 * Math.PI * (1 - t);
+  												x = cx + cr * Math.sin(a);
+  												y = cy + cr - cr * (1 - Math.cos(a));
+  									} else {
+  												x = Math.pow(1 - t, 2) * this.fromPoint.x + 2 * t * (1 - t) * viaNode.x + Math.pow(t, 2) * this.toPoint.x;
+  												y = Math.pow(1 - t, 2) * this.fromPoint.y + 2 * t * (1 - t) * viaNode.y + Math.pow(t, 2) * this.toPoint.y;
+  									}
+
+  									return { x: x, y: y };
+  						}
+  			}, {
+  						key: "_findBorderPosition",
+  						value: function _findBorderPosition(nearNode, ctx) {
+  									return this._findBorderPositionElbow(nearNode, ctx, this.via);
+  						}
   			}, {
   						key: "_getDistanceToEdge",
   						value: function _getDistanceToEdge(x1, y1, x2, y2, x3, y3) {
@@ -42944,7 +42987,7 @@ return /******/ (function(modules) { // webpackBootstrap
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
-      value: true
+  	value: true
   });
 
   var _getPrototypeOf = __webpack_require__(176);
@@ -42954,6 +42997,10 @@ return /******/ (function(modules) { // webpackBootstrap
   var _classCallCheck2 = __webpack_require__(135);
 
   var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+  var _createClass2 = __webpack_require__(136);
+
+  var _createClass3 = _interopRequireDefault(_createClass2);
 
   var _possibleConstructorReturn2 = __webpack_require__(179);
 
@@ -42970,14 +43017,79 @@ return /******/ (function(modules) { // webpackBootstrap
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
   var ElbowEdgeBase = function (_EdgeBase) {
-      (0, _inherits3['default'])(ElbowEdgeBase, _EdgeBase);
+  	(0, _inherits3['default'])(ElbowEdgeBase, _EdgeBase);
 
-      function ElbowEdgeBase(options, body, labelModule) {
-          (0, _classCallCheck3['default'])(this, ElbowEdgeBase);
-          return (0, _possibleConstructorReturn3['default'])(this, (ElbowEdgeBase.__proto__ || (0, _getPrototypeOf2['default'])(ElbowEdgeBase)).call(this, options, body, labelModule));
-      }
+  	function ElbowEdgeBase(options, body, labelModule) {
+  		(0, _classCallCheck3['default'])(this, ElbowEdgeBase);
+  		return (0, _possibleConstructorReturn3['default'])(this, (ElbowEdgeBase.__proto__ || (0, _getPrototypeOf2['default'])(ElbowEdgeBase)).call(this, options, body, labelModule));
+  	}
 
-      return ElbowEdgeBase;
+  	/**
+    * This function uses binary search to look for the point where the bezier curve crosses the border of the node.
+    *
+    * @param nearNode
+    * @param ctx
+    * @param viaNode
+    * @param nearNode
+    * @param ctx
+    * @param viaNode
+    * @param nearNode
+    * @param ctx
+    * @param viaNode
+    */
+
+
+  	(0, _createClass3['default'])(ElbowEdgeBase, [{
+  		key: '_findBorderPositionElbow',
+  		value: function _findBorderPositionElbow(nearNode, ctx) {
+  			var viaNode = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : this.via;
+
+  			var maxIterations = 10;
+  			var iteration = 0;
+  			var low = 0;
+  			var high = 1;
+  			var pos, angle, distanceToBorder, distanceToPoint, difference;
+  			var threshold = 0.2;
+  			var node = this.to;
+  			var from = false;
+  			if (nearNode.id === this.from.id) {
+  				node = this.from;
+  				from = true;
+  			}
+
+  			while (low <= high && iteration < maxIterations) {
+  				var middle = (low + high) * 0.5;
+
+  				pos = this.getPoint(middle, viaNode);
+  				angle = Math.atan2(node.y - pos.y, node.x - pos.x);
+  				distanceToBorder = node.distanceToBorder(ctx, angle);
+  				distanceToPoint = Math.sqrt(Math.pow(pos.x - node.x, 2) + Math.pow(pos.y - node.y, 2));
+  				difference = distanceToBorder - distanceToPoint;
+  				if (Math.abs(difference) < threshold) {
+  					break; // found
+  				} else if (difference < 0) {
+  					// distance to nodes is larger than distance to border --> t needs to be bigger if we're looking at the to node.
+  					if (from === false) {
+  						low = middle;
+  					} else {
+  						high = middle;
+  					}
+  				} else {
+  					if (from === false) {
+  						high = middle;
+  					} else {
+  						low = middle;
+  					}
+  				}
+
+  				iteration++;
+  			}
+  			pos.t = middle;
+
+  			return pos;
+  		}
+  	}]);
+  	return ElbowEdgeBase;
   }(_EdgeBase3['default']);
 
   exports['default'] = ElbowEdgeBase;
