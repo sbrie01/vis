@@ -42843,7 +42843,7 @@ return /******/ (function(modules) { // webpackBootstrap
   												var node = this.body.functions.createNode({
   															id: nodeId,
   															shape: 'dot',
-  															size: 3,
+  															size: 5,
   															physics: true,
   															hidden: false
   												});
