@@ -42966,6 +42966,8 @@ return /******/ (function(modules) { // webpackBootstrap
   			}, {
   						key: "_findBorderPosition",
   						value: function _findBorderPosition(nearNode, ctx) {
+  									var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+
   									return this._findBorderPositionElbow(nearNode, ctx, this.via);
   						}
   			}, {
