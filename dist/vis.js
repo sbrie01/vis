@@ -39487,14 +39487,19 @@ return /******/ (function(modules) { // webpackBootstrap
   												ctx.font = (selected ? "bold " : "") + iconSize + "px " + this.options.icon.face;
 
   												// if icon needs a background, draw it
-  												if (this.options.icon.background.color !== null) {
+  												if (this.options.icon.background !== null) {
 
   															// if background has padding, set padding variable
   															var padding = this.options.icon.background.padding ? this.options.icon.background.padding : 0;
 
   															ctx.beginPath();
-  															ctx.fillStyle = this.options.icon.backgroundColor || "black";
-  															ctx.rect(x - iconSize / 2, y - iconSize / 2, iconSize + padding, iconSize + padding);
+  															ctx.fillStyle = this.options.icon.background.color || "black";
+
+  															var xCoord = x - (iconSize + padding) / 2;
+  															var yCoord = y - (iconSize + padding) / 2;
+  															var sideLength = iconSize + padding;
+
+  															ctx.rect(xCoord, yCoord, sideLength, sideLength);
   															ctx.fill();
   												}
 
