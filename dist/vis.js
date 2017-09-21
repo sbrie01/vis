@@ -39490,7 +39490,7 @@ return /******/ (function(modules) { // webpackBootstrap
   												if (this.options.icon.backgroundColor !== null) {
   															ctx.beginPath();
   															ctx.fillStyle = this.options.icon.backgroundColor || "black";
-  															ctx.rect(x, y, iconSize, iconSize);
+  															ctx.rect(x - iconSize / 2, y - iconSize / 2, iconSize, iconSize);
   															ctx.fill();
   												}
 
