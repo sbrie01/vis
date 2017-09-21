@@ -39430,6 +39430,7 @@ return /******/ (function(modules) { // webpackBootstrap
   						var _this = (0, _possibleConstructorReturn3['default'])(this, (Icon.__proto__ || (0, _getPrototypeOf2['default'])(Icon)).call(this, options, body, labelModule));
 
   						_this._setMargins(labelModule);
+  						_this.options.background;
   						return _this;
   			}
 
