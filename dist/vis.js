@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.20.1
- * @date    2017-09-05
+ * @date    2017-09-21
  *
  * @license
  * Copyright (C) 2011-2017 Almende B.V, http://almende.com
@@ -39392,7 +39392,7 @@ return /******/ (function(modules) { // webpackBootstrap
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
-    value: true
+  			value: true
   });
 
   var _getPrototypeOf = __webpack_require__(176);
@@ -39422,92 +39422,100 @@ return /******/ (function(modules) { // webpackBootstrap
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
   var Icon = function (_NodeBase) {
-    (0, _inherits3['default'])(Icon, _NodeBase);
+  			(0, _inherits3['default'])(Icon, _NodeBase);
 
-    function Icon(options, body, labelModule) {
-      (0, _classCallCheck3['default'])(this, Icon);
+  			function Icon(options, body, labelModule) {
+  						(0, _classCallCheck3['default'])(this, Icon);
 
-      var _this = (0, _possibleConstructorReturn3['default'])(this, (Icon.__proto__ || (0, _getPrototypeOf2['default'])(Icon)).call(this, options, body, labelModule));
+  						var _this = (0, _possibleConstructorReturn3['default'])(this, (Icon.__proto__ || (0, _getPrototypeOf2['default'])(Icon)).call(this, options, body, labelModule));
 
-      _this._setMargins(labelModule);
-      return _this;
-    }
+  						_this._setMargins(labelModule);
+  						return _this;
+  			}
 
-    (0, _createClass3['default'])(Icon, [{
-      key: 'resize',
-      value: function resize(ctx, selected, hover) {
-        if (this.needsRefresh(selected, hover)) {
-          this.iconSize = {
-            width: Number(this.options.icon.size),
-            height: Number(this.options.icon.size)
-          };
-          this.width = this.iconSize.width + this.margin.right + this.margin.left;
-          this.height = this.iconSize.height + this.margin.top + this.margin.bottom;
-          this.radius = 0.5 * this.width;
-        }
-      }
-    }, {
-      key: 'draw',
-      value: function draw(ctx, x, y, selected, hover, values) {
-        this.resize(ctx, selected, hover);
-        this.options.icon.size = this.options.icon.size || 50;
+  			(0, _createClass3['default'])(Icon, [{
+  						key: 'resize',
+  						value: function resize(ctx, selected, hover) {
+  									if (this.needsRefresh(selected, hover)) {
+  												this.iconSize = {
+  															width: Number(this.options.icon.size),
+  															height: Number(this.options.icon.size)
+  												};
+  												this.width = this.iconSize.width + this.margin.right + this.margin.left;
+  												this.height = this.iconSize.height + this.margin.top + this.margin.bottom;
+  												this.radius = 0.5 * this.width;
+  									}
+  						}
+  			}, {
+  						key: 'draw',
+  						value: function draw(ctx, x, y, selected, hover, values) {
+  									this.resize(ctx, selected, hover);
+  									this.options.icon.size = this.options.icon.size || 50;
 
-        this.left = x - this.width / 2;
-        this.top = y - this.height / 2;
-        this._icon(ctx, x, y, selected, hover, values);
+  									this.left = x - this.width / 2;
+  									this.top = y - this.height / 2;
+  									this._icon(ctx, x, y, selected, hover, values);
 
-        if (this.options.label !== undefined) {
-          var iconTextSpacing = 5;
-          this.labelModule.draw(ctx, this.left + this.iconSize.width / 2 + this.margin.left, y + this.height / 2 + iconTextSpacing, selected);
-        }
+  									if (this.options.label !== undefined) {
+  												var iconTextSpacing = 5;
+  												this.labelModule.draw(ctx, this.left + this.iconSize.width / 2 + this.margin.left, y + this.height / 2 + iconTextSpacing, selected);
+  									}
 
-        this.updateBoundingBox(x, y);
-      }
-    }, {
-      key: 'updateBoundingBox',
-      value: function updateBoundingBox(x, y) {
-        this.boundingBox.top = y - this.options.icon.size * 0.5;
-        this.boundingBox.left = x - this.options.icon.size * 0.5;
-        this.boundingBox.right = x + this.options.icon.size * 0.5;
-        this.boundingBox.bottom = y + this.options.icon.size * 0.5;
+  									this.updateBoundingBox(x, y);
+  						}
+  			}, {
+  						key: 'updateBoundingBox',
+  						value: function updateBoundingBox(x, y) {
+  									this.boundingBox.top = y - this.options.icon.size * 0.5;
+  									this.boundingBox.left = x - this.options.icon.size * 0.5;
+  									this.boundingBox.right = x + this.options.icon.size * 0.5;
+  									this.boundingBox.bottom = y + this.options.icon.size * 0.5;
 
-        if (this.options.label !== undefined && this.labelModule.size.width > 0) {
-          var iconTextSpacing = 5;
-          this.boundingBox.left = Math.min(this.boundingBox.left, this.labelModule.size.left);
-          this.boundingBox.right = Math.max(this.boundingBox.right, this.labelModule.size.left + this.labelModule.size.width);
-          this.boundingBox.bottom = Math.max(this.boundingBox.bottom, this.boundingBox.bottom + this.labelModule.size.height + iconTextSpacing);
-        }
-      }
-    }, {
-      key: '_icon',
-      value: function _icon(ctx, x, y, selected, hover, values) {
-        var iconSize = Number(this.options.icon.size);
+  									if (this.options.label !== undefined && this.labelModule.size.width > 0) {
+  												var iconTextSpacing = 5;
+  												this.boundingBox.left = Math.min(this.boundingBox.left, this.labelModule.size.left);
+  												this.boundingBox.right = Math.max(this.boundingBox.right, this.labelModule.size.left + this.labelModule.size.width);
+  												this.boundingBox.bottom = Math.max(this.boundingBox.bottom, this.boundingBox.bottom + this.labelModule.size.height + iconTextSpacing);
+  									}
+  						}
+  			}, {
+  						key: '_icon',
+  						value: function _icon(ctx, x, y, selected, hover, values) {
+  									var iconSize = Number(this.options.icon.size);
 
-        if (this.options.icon.code !== undefined) {
-          ctx.font = (selected ? "bold " : "") + iconSize + "px " + this.options.icon.face;
+  									if (this.options.icon.code !== undefined) {
+  												ctx.font = (selected ? "bold " : "") + iconSize + "px " + this.options.icon.face;
 
-          // draw icon
-          ctx.fillStyle = this.options.icon.color || "black";
-          ctx.textAlign = "center";
-          ctx.textBaseline = "middle";
+  												// if icon needs a background, draw it
+  												if (this.options.icon.backgroundColor !== null) {
+  															ctx.beginPath();
+  															ctx.fillStyle = this.options.icon.backgroundColor || "black";
+  															ctx.rect(x, y, iconSize, iconSize);
+  															ctx.fill();
+  												}
 
-          // draw shadow if enabled
-          this.enableShadow(ctx, values);
-          ctx.fillText(this.options.icon.code, x, y);
+  												// draw icon
+  												ctx.fillStyle = this.options.icon.color || "black";
+  												ctx.textAlign = "center";
+  												ctx.textBaseline = "middle";
 
-          // disable shadows for other elements.
-          this.disableShadow(ctx, values);
-        } else {
-          console.error('When using the icon shape, you need to define the code in the icon options object. This can be done per node or globally.');
-        }
-      }
-    }, {
-      key: 'distanceToBorder',
-      value: function distanceToBorder(ctx, angle) {
-        return this._distanceToBorder(ctx, angle);
-      }
-    }]);
-    return Icon;
+  												// draw shadow if enabled
+  												this.enableShadow(ctx, values);
+  												ctx.fillText(this.options.icon.code, x, y);
+
+  												// disable shadows for other elements.
+  												this.disableShadow(ctx, values);
+  									} else {
+  												console.error('When using the icon shape, you need to define the code in the icon options object. This can be done per node or globally.');
+  									}
+  						}
+  			}, {
+  						key: 'distanceToBorder',
+  						value: function distanceToBorder(ctx, angle) {
+  									return this._distanceToBorder(ctx, angle);
+  						}
+  			}]);
+  			return Icon;
   }(_NodeBase3['default']);
 
   exports['default'] = Icon;
