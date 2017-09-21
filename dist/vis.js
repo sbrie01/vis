@@ -36370,7 +36370,7 @@ return /******/ (function(modules) { // webpackBootstrap
   var Diamond = __webpack_require__(190)['default'];
   var Dot = __webpack_require__(192)['default'];
   var Ellipse = __webpack_require__(193)['default'];
-  var Icon = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./nodes/shapes/Icon\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()))['default'];
+  var Icon = __webpack_require__(194)['default'];
   var Image = __webpack_require__(195)['default'];
   var Square = __webpack_require__(196)['default'];
   var Star = __webpack_require__(197)['default'];
@@ -39386,7 +39386,145 @@ return /******/ (function(modules) { // webpackBootstrap
   exports['default'] = Ellipse;
 
 /***/ }),
-/* 194 */,
+/* 194 */
+/***/ (function(module, exports, __webpack_require__) {
+
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+  			value: true
+  });
+
+  var _getPrototypeOf = __webpack_require__(176);
+
+  var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+  var _classCallCheck2 = __webpack_require__(135);
+
+  var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+  var _createClass2 = __webpack_require__(136);
+
+  var _createClass3 = _interopRequireDefault(_createClass2);
+
+  var _possibleConstructorReturn2 = __webpack_require__(179);
+
+  var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+  var _inherits2 = __webpack_require__(180);
+
+  var _inherits3 = _interopRequireDefault(_inherits2);
+
+  var _NodeBase2 = __webpack_require__(185);
+
+  var _NodeBase3 = _interopRequireDefault(_NodeBase2);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  var Icon = function (_NodeBase) {
+  			(0, _inherits3['default'])(Icon, _NodeBase);
+
+  			function Icon(options, body, labelModule) {
+  						(0, _classCallCheck3['default'])(this, Icon);
+
+  						var _this = (0, _possibleConstructorReturn3['default'])(this, (Icon.__proto__ || (0, _getPrototypeOf2['default'])(Icon)).call(this, options, body, labelModule));
+
+  						_this._setMargins(labelModule);
+  						return _this;
+  			}
+
+  			(0, _createClass3['default'])(Icon, [{
+  						key: 'resize',
+  						value: function resize(ctx, selected, hover) {
+  									if (this.needsRefresh(selected, hover)) {
+  												this.iconSize = {
+  															width: Number(this.options.icon.size),
+  															height: Number(this.options.icon.size)
+  												};
+  												this.width = this.iconSize.width + this.margin.right + this.margin.left;
+  												this.height = this.iconSize.height + this.margin.top + this.margin.bottom;
+  												this.radius = 0.5 * this.width;
+  									}
+  						}
+  			}, {
+  						key: 'draw',
+  						value: function draw(ctx, x, y, selected, hover, values) {
+  									this.resize(ctx, selected, hover);
+  									this.options.icon.size = this.options.icon.size || 50;
+
+  									this.left = x - this.width / 2;
+  									this.top = y - this.height / 2;
+  									this._icon(ctx, x, y, selected, hover, values);
+
+  									if (this.options.label !== undefined) {
+  												var iconTextSpacing = 5;
+  												this.labelModule.draw(ctx, this.left + this.iconSize.width / 2 + this.margin.left, y + this.height / 2 + iconTextSpacing, selected);
+  									}
+
+  									this.updateBoundingBox(x, y);
+  						}
+  			}, {
+  						key: 'updateBoundingBox',
+  						value: function updateBoundingBox(x, y) {
+  									this.boundingBox.top = y - this.options.icon.size * 0.5;
+  									this.boundingBox.left = x - this.options.icon.size * 0.5;
+  									this.boundingBox.right = x + this.options.icon.size * 0.5;
+  									this.boundingBox.bottom = y + this.options.icon.size * 0.5;
+
+  									if (this.options.label !== undefined && this.labelModule.size.width > 0) {
+  												var iconTextSpacing = 5;
+  												this.boundingBox.left = Math.min(this.boundingBox.left, this.labelModule.size.left);
+  												this.boundingBox.right = Math.max(this.boundingBox.right, this.labelModule.size.left + this.labelModule.size.width);
+  												this.boundingBox.bottom = Math.max(this.boundingBox.bottom, this.boundingBox.bottom + this.labelModule.size.height + iconTextSpacing);
+  									}
+  						}
+  			}, {
+  						key: '_icon',
+  						value: function _icon(ctx, x, y, selected, hover, values) {
+  									var iconSize = Number(this.options.icon.size);
+
+  									if (this.options.icon.code !== undefined) {
+  												ctx.font = (selected ? "bold " : "") + iconSize + "px " + this.options.icon.face;
+
+  												// if icon needs a background, draw it
+  												if (this.options.icon.background.color !== null) {
+
+  															// if background has padding, set padding variable
+  															var padding = this.options.icon.background.padding ? this.options.icon.background.padding : 0;
+
+  															ctx.beginPath();
+  															ctx.fillStyle = this.options.icon.backgroundColor || "black";
+  															ctx.rect(x - iconSize / 2, y - iconSize / 2, iconSize + padding, iconSize + padding);
+  															ctx.fill();
+  												}
+
+  												// draw icon
+  												ctx.fillStyle = this.options.icon.color || "black";
+  												ctx.textAlign = "center";
+  												ctx.textBaseline = "middle";
+
+  												// draw shadow if enabled
+  												this.enableShadow(ctx, values);
+  												ctx.fillText(this.options.icon.code, x, y);
+
+  												// disable shadows for other elements.
+  												this.disableShadow(ctx, values);
+  									} else {
+  												console.error('When using the icon shape, you need to define the code in the icon options object. This can be done per node or globally.');
+  									}
+  						}
+  			}, {
+  						key: 'distanceToBorder',
+  						value: function distanceToBorder(ctx, angle) {
+  									return this._distanceToBorder(ctx, angle);
+  						}
+  			}]);
+  			return Icon;
+  }(_NodeBase3['default']);
+
+  exports['default'] = Icon;
+
+/***/ }),
 /* 195 */
 /***/ (function(module, exports, __webpack_require__) {
 
