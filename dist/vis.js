@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.20.1
- * @date    2017-09-21
+ * @date    2017-12-06
  *
  * @license
  * Copyright (C) 2011-2017 Almende B.V, http://almende.com
@@ -35890,7 +35890,8 @@ return /******/ (function(modules) { // webpackBootstrap
           face: 'FontAwesome', //'FontAwesome',
           code: undefined, //'\uf007',
           size: 50, //50,
-          color: '#2B7CE9' //'#aa00ff'
+          color: '#2B7CE9', //'#aa00ff'
+          background: 'rgba(0,0,0,0)' // 'transparent'
         },
         image: undefined, // --> URL
         label: undefined,
@@ -39430,7 +39431,7 @@ return /******/ (function(modules) { // webpackBootstrap
   						var _this = (0, _possibleConstructorReturn3['default'])(this, (Icon.__proto__ || (0, _getPrototypeOf2['default'])(Icon)).call(this, options, body, labelModule));
 
   						_this._setMargins(labelModule);
-  						_this.options.background;
+  						_this.options.background = undefined;
   						return _this;
   			}
 
@@ -42866,8 +42867,12 @@ return /******/ (function(modules) { // webpackBootstrap
   															shape: 'dot',
   															size: 5,
   															physics: true,
-  															hidden: false
+  															hidden: false,
+  															label: this.options.label
   												});
+
+  												// remove label from edge
+  												this.options.label = undefined;
 
   												this.body.nodes[nodeId] = node;
   												this.via = node;
