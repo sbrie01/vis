@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.20.1
- * @date    2017-12-06
+ * @date    2017-12-07
  *
  * @license
  * Copyright (C) 2011-2017 Almende B.V, http://almende.com
@@ -42880,6 +42880,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
   												// position the hidden node 
   												this.positionElbowNodes();
+  									} else {
+  												console.log("node exists at ", this.via.x, this.via.y);
   									}
   						}
   						/**
@@ -42913,11 +42915,17 @@ return /******/ (function(modules) { // webpackBootstrap
   			}, {
   						key: "positionElbowNodes",
   						value: function positionElbowNodes() {
-  									if (this.via !== undefined && this.from !== undefined && this.to !== undefined) {
-  												var coords = this._getHiddenCoords(this.from, this.to);
+  									console.log("elbow node", this.via.id, "exists at ", this.via.x, ",", this.via.y);
 
-  												this.via.x = coords.x;
-  												this.via.y = coords.y;
+  									if (this.via !== undefined && this.from !== undefined && this.to !== undefined) {
+  												if (this.via.x !== undefined && this.via.y !== undefined) {
+  															// do nothing
+  												} else {
+  															var coords = this._getHiddenCoords(this.from, this.to);
+
+  															this.via.x = coords.x;
+  															this.via.y = coords.y;
+  												}
   									} else if (this.via !== undefined) {
   												this.via.x = 0;
   												this.via.y = 0;

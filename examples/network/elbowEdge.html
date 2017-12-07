@@ -22,43 +22,70 @@
     </p>
 
     <div id="mynetwork"></div>
-
+    <button onclick="exportDiagram()">Export</button>
+    <hr>
+    <textarea cols="84" rows="10" id="dataset"></textarea><br>
+    <button onclick="loadDiagram()">Load</button>
+    
     <script type="text/javascript">
-      // create an array with nodes
-      var nodes = new vis.DataSet([
-	  {
-	      id: 1,
-	      label: 'Node 1',
-	      shape: "icon",
-	      icon: {
-		  face: "FontAwesome",
-		  code: "\uf0c0",
-		  background: {
-		      color: "white",
-		      padding: 5
-		  }
-	      }
-	  },
-      {id: 2, label: 'Node 2'},
-      {id: 3, label: 'Node 3'},
-      {id: 4, label: 'Node 4'},
-      {id: 5, label: 'Node 5'}
-      ]);
+     function loadDiagram() {
+	 let json = JSON.parse(document.getElementById("dataset").innerHTML);
+	 
+	 console.log(json);
+	 
+	 data.update(json.nodes);
+	 data.edges.update(json.edges);
+	 
+     }
+     
+     function exportDiagram() {
+	 let dataset = {
+	     "nodes": data.nodes.get(),
+	     "edges": data.edges.get()
+	 }
 
-      // create an array with edges
-      var edges = new vis.DataSet([
-      {from: 1, to: 3, elbow: true, label:"Hello World"},
-      {from: 1, to: 2},
-      {from: 2, to: 4},
-      {from: 2, to: 5, elbow: true}
-      ]);
+	 console.log(dataset);
+	 
+	 document.getElementById("dataset").innerHTML = JSON.stringify(dataset);
+     }
+     
+     // create an array with nodes
+     var nodes = new vis.DataSet([
+	 {
+	     id: 1,
+	     label: 'Node 1',
+	     shape: "icon",
+	     icon: {
+		 face: "FontAwesome",
+		 code: "\uf0c0",
+		 background: {
+		     color: "white",
+		     padding: 5
+		 }
+	     }
+	 },
+	 {id: 2, label: 'Node 2'},
+	 {id: 3, label: 'Node 3'},
+	 {id: 4, label: 'Node 4'},
+	 {id: 5, label: 'Node 5'}
+     ]);
 
-      // create a network
-      var container = document.getElementById('mynetwork');
-      var data = {
-      nodes: nodes,
-      edges: edges
-      };
+     // create an array with edges
+     var edges = new vis.DataSet([
+	 {id: 6, from: 1, to: 3, elbow: true, label:"Hello World"},
+	 {from: 1, to: 2},
+	 {from: 2, to: 4},
+	 {from: 2, to: 5, elbow: true}
+     ]);
+
+     // create a network
+     var container = document.getElementById('mynetwork');
+     
+     var data = {
+	 nodes: nodes,
+	 edges: edges
+     };
+     
      var options = {
 	 physics: false,
 	 edges: {
@@ -70,9 +97,15 @@
 	     smooth: {
 		 enabled: false
 	     }
-	 }
+	 },
+	 manipulation: true
      };
-      var network = new vis.Network(container, data, options);
+     var network = new vis.Network(container, data, options);
+
+     network.on("dragEnd", function(params) {
+	 var nodeId = params.nodes[0];
+	 console.log(params);
+     });
     </script>
 
 
