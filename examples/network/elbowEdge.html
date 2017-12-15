@@ -75,7 +75,7 @@
 	 {id: 6, from: 1, to: 3, elbow: true, label:"Hello World"},
 	 {from: 1, to: 2},
 	 {from: 2, to: 4},
-	 {from: 2, to: 5, elbow: true}
+	 {from: 2, to: 5, elbow: {x: 29, y: 50}}
      ]);
 
      // create a network
@@ -98,7 +98,14 @@
 		 enabled: false
 	     }
 	 },
-	 manipulation: true
+	 manipulation: {
+	     addEdge: function(data, callback) {
+		 data.elbow = {"x": 1, "y": 40}
+		 /* data.elbow = true;*/
+		 data.label = "Label";
+		 callback(data);
+	     }
+	 }
      };
      var network = new vis.Network(container, data, options);
 
