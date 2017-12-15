@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.20.1
- * @date    2017-12-07
+ * @date    2017-12-15
  *
  * @license
  * Copyright (C) 2011-2017 Almende B.V, http://almende.com
@@ -39495,7 +39495,7 @@ return /******/ (function(modules) { // webpackBootstrap
   															var padding = this.options.icon.background.padding ? this.options.icon.background.padding : 0;
 
   															ctx.beginPath();
-  															ctx.fillStyle = this.options.icon.background.color || "black";
+  															ctx.fillStyle = this.options.icon.background.color || "rgba(0,0,0,0)";
 
   															var xCoord = x - (iconSize + padding) / 2;
   															var yCoord = y - (iconSize + padding) / 2;
@@ -40531,7 +40531,7 @@ return /******/ (function(modules) { // webpackBootstrap
   		this.to = undefined; // a node
 
   		this.edgeType = undefined;
-  		// this.elbow = true;
+  		this.elbow = options.elbow;
 
   		this.connected = false;
 
@@ -40549,6 +40549,7 @@ return /******/ (function(modules) { // webpackBootstrap
   	(0, _createClass3['default'])(Edge, [{
   		key: 'setOptions',
   		value: function setOptions(options) {
+  			console.log(options);
   			if (!options) {
   				return;
   			}
@@ -40728,7 +40729,7 @@ return /******/ (function(modules) { // webpackBootstrap
   						this.edgeType = new BezierEdgeStatic(this.options, this.body, this.labelModule);
   					}
   				} else {
-  					if (this.elbow === true) {
+  					if (this.elbow !== null && this.elbow !== undefined) {
   						this.edgeType = new ElbowEdge(this.options, this.body, this.labelModule);
   					} else {
   						this.edgeType = new StraightEdge(this.options, this.body, this.labelModule);
@@ -41058,7 +41059,7 @@ return /******/ (function(modules) { // webpackBootstrap
   			var allowDeletion = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
   			var globalOptions = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
-  			var fields = ['arrowStrikethrough', 'id', 'from', 'hidden', 'hoverWidth', 'label', 'labelHighlightBold', 'length', 'line', 'opacity', 'physics', 'scaling', 'selectionWidth', 'selfReferenceSize', 'to', 'title', 'value', 'width'];
+  			var fields = ['arrowStrikethrough', 'id', 'elbow', 'from', 'hidden', 'hoverWidth', 'label', 'labelHighlightBold', 'length', 'line', 'opacity', 'physics', 'scaling', 'selectionWidth', 'selfReferenceSize', 'to', 'title', 'value', 'width'];
 
   			// only deep extend the items in the field array. These do not have shorthand.
   			util.selectiveDeepExtend(fields, parentOptions, newOptions, allowDeletion);
@@ -42791,6 +42792,7 @@ return /******/ (function(modules) { // webpackBootstrap
   			(0, _createClass3["default"])(ElbowEdge, [{
   						key: "setOptions",
   						value: function setOptions(options) {
+  									/* console.log(options);*/
   									// check if the physics has changed
   									var physicsChange = false;
   									if (this.options.physics !== options.physics) {
@@ -42802,7 +42804,7 @@ return /******/ (function(modules) { // webpackBootstrap
   									this.id = this.options.id;
   									this.from = this.body.nodes[this.options.from];
   									this.to = this.body.nodes[this.options.to];
-  									this.elbow = true;
+  									this.elbow = this.options.elbow;
 
   									// setup the support node and connect
   									this.setupSupportNode();
@@ -42880,8 +42882,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
   												// position the hidden node 
   												this.positionElbowNodes();
-  									} else {
-  												console.log("node exists at ", this.via.x, this.via.y);
   									}
   						}
   						/**
@@ -42893,6 +42893,10 @@ return /******/ (function(modules) { // webpackBootstrap
   			}, {
   						key: "_getHiddenCoords",
   						value: function _getHiddenCoords(fromNode, toNode) {
+  									if (this.elbow.x !== undefined && this.elbow.y !== undefined) {
+  												return { x: this.elbow.x, y: this.elbow.y };
+  									}
+
   									// get equation for line between nodes
   									var slope = (fromNode.y - toNode.y) / (fromNode.x - toNode.x);
   									var b = fromNode.y - slope * fromNode.x;
@@ -42915,17 +42919,11 @@ return /******/ (function(modules) { // webpackBootstrap
   			}, {
   						key: "positionElbowNodes",
   						value: function positionElbowNodes() {
-  									console.log("elbow node", this.via.id, "exists at ", this.via.x, ",", this.via.y);
-
   									if (this.via !== undefined && this.from !== undefined && this.to !== undefined) {
-  												if (this.via.x !== undefined && this.via.y !== undefined) {
-  															// do nothing
-  												} else {
-  															var coords = this._getHiddenCoords(this.from, this.to);
+  												var coords = this._getHiddenCoords(this.from, this.to);
 
-  															this.via.x = coords.x;
-  															this.via.y = coords.y;
-  												}
+  												this.via.x = coords.x;
+  												this.via.y = coords.y;
   									} else if (this.via !== undefined) {
   												this.via.x = 0;
   												this.via.y = 0;
